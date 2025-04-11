@@ -14,6 +14,8 @@ resource "aws_internet_gateway" "gw" {
   }
 }
 
+data "aws_availability_zones" "available" {}
+
 resource "aws_subnet" "public" {
   count                   = 2
   vpc_id                  = aws_vpc.main.id
@@ -43,8 +45,6 @@ resource "aws_route_table_association" "public_subnets" {
   subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
 }
-
-data "aws_availability_zones" "available" {}
 
 output "vpc_id" {
   value = aws_vpc.main.id
