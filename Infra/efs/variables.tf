@@ -1,9 +1,12 @@
-variable "subnet_ids" {
-  description = "List of subnet IDs for EFS mount targets"
-  type        = list(string)
+variable "performance_mode" {
+  description = "The performance mode for the EFS file system"
+  type        = string
+  default     = "generalPurpose"
 }
 
-variable "efs_security_group_id" {
-  description = "Security Group ID for EFS mount target"
-  type        = string
+variable "encrypted" {
+  description = "Indicates if the EFS file system is encrypted"
+  type        = bool
+  default     = true
 }
+

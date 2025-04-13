@@ -1,24 +1,29 @@
-variable "execution_role_arn" {
-  description = "IAM Role ARN used by ECS task definitions for execution"
+variable "file_system_id" {
+  description = "EFS File System ID to mount into ECS Task"
   type        = string
 }
 
-variable "file_system_id" {
-  description = "The EFS filesystem ID to mount"
+variable "efs_access_point_arn" {
+  description = "EFS Access Point ARN to mount into ECS Task"
+  type        = string
+}
+
+variable "execution_role_arn" {
+  description = "IAM Execution Role ARN for ECS task"
   type        = string
 }
 
 variable "subnet_ids" {
-  description = "List of subnet IDs to run ECS services in"
-  type        = list(string)
-}
-
-variable "security_group_ids" {
-  description = "List of security group IDs to associate with ECS services"
+  description = "Subnets for ECS service"
   type        = list(string)
 }
 
 variable "ecs_cluster_id" {
-  description = "ECS Cluster ID to associate ECS services with"
+  description = "ECS Cluster ID"
   type        = string
+}
+
+variable "security_group_ids" {
+  description = "Security Groups for ECS task"
+  type        = list(string)
 }

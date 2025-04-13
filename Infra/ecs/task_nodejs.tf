@@ -1,54 +1,37 @@
 resource "aws_ecs_task_definition" "nodejs" {
   family                   = "nodejs-task"
-  requires_compatibilities = ["EC2"]
   network_mode             = "awsvpc"
+  requires_compatibilities = ["EC2"]
   cpu                      = "256"
   memory                   = "512"
   execution_role_arn       = var.execution_role_arn
 
   container_definitions = jsonencode([
     {
-      name      = "nodejs"
-      image     = "node:18"
+      name      = "nodejs-app"
+      image     = "your-nodejs-image"  # Replace this
       essential = true
-      portMappings = [
-        {
-          containerPort = 3000
-          hostPort      = 3000
-        }
-      ],
-      mountPoints = [
-        {
-          containerPath = "/data"
-          sourceVolume  = "nodejs-efs"
-          readOnly      = false
-        }
-      ]
+      portMappings = [{
+        containerPort = 3000
+        hostPort      = 3000
+      }]
+      mountPoints = [{
+        sourceVolume  = "nodejs-volume"
+        containerPath = "/mnt/data"
+      }]
     }
   ])
 
   volume {
-    name = "nodejs-efs"
+    name = "nodejs-volume"
     efs_volume_configuration {
-      file_system_id     = var.file_system_id
-      root_directory     = "/nodejs"
-      transit_encryption = "ENABLED"
+      file_system_id          = var.file_system_id
+      transit_encryption      = "ENABLED"
+      authorization_config {
+        access_point_id = split("/", var.efs_access_point_arn)[length(split("/", var.efs_access_point_arn)) - 1]
+        iam             = "ENABLED"
+      }
     }
   }
 }
 
-resource "aws_ecs_service" "nodejs" {
-  name            = "nodejs-service"
-  cluster         = var.ecs_cluster_id
-  task_definition = aws_ecs_task_definition.nodejs.arn
-  launch_type     = "EC2"
-  desired_count   = 1
-
-  network_configuration {
-    subnets          = var.subnet_ids
-    security_groups  = var.security_group_ids
-    assign_public_ip = true
-  }
-
-  depends_on = [aws_ecs_task_definition.nodejs]
-}
