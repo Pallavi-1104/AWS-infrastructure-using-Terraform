@@ -72,7 +72,7 @@ resource "aws_security_group" "ecs_service" {
 data "aws_availability_zones" "available" {}
 
 output "vpc_id" {
-  value = aws_vpc.main.id
+  value = aws_vpc.example.id
 }
 
 output "public_subnet_ids" {
@@ -84,6 +84,6 @@ output "security_group_ids" {
 }
 
 
-output "vpc_id" {
-  value = aws_vpc.main.id
+output "vpc_id_unique" {  # Renaming the second one
+  value = aws_vpc.example.id
 }
