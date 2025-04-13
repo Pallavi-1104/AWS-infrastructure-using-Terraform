@@ -1,11 +1,8 @@
 resource "aws_vpc" "main" {
-  cidr_block           = "10.0.0.0/16"
-  enable_dns_support   = true
-  enable_dns_hostnames = true
-  tags = {
-    Name = "main-vpc"
-  }
+  cidr_block = "10.0.0.0/16"
+  ...
 }
+
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
@@ -72,7 +69,11 @@ resource "aws_security_group" "ecs_service" {
 data "aws_availability_zones" "available" {}
 
 output "vpc_id" {
-  value = aws_vpc.example.id
+  value = aws_vpc.main.id
+}
+
+output "vpc_id_unique" {
+  value = aws_vpc.main.id
 }
 
 output "public_subnet_ids" {
@@ -84,6 +85,3 @@ output "security_group_ids" {
 }
 
 
-output "vpc_id_unique" {  # Renaming the second one
-  value = aws_vpc.example.id
-}
