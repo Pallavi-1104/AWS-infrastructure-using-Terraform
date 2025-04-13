@@ -12,15 +12,13 @@ resource "aws_efs_mount_target" "this" {
   file_system_id = aws_efs_file_system.this.id
   subnet_id      = var.subnet_ids[count.index]
   security_groups = [var.ecs_sg_id]  # Pass ecs_sg_id as a variable
-
-  # Remove tags here, as they are not supported directly for mount targets.
 }
 
-# Tag the mount targets using aws_efs_mount_target_tag
-resource "aws_efs_mount_target_tag" "efs_mount_tag" {
+# Use aws_tags to tag the mount targets after creation
+resource "aws_tags" "efs_mount_target_tags" {
   count = length(var.subnet_ids)
 
-  mount_target_id = aws_efs_mount_target.this[count.index].id
+  resource_id = aws_efs_mount_target.this[count.index].id
 
   tags = {
     Name = "efs-mount-target-${count.index}"
