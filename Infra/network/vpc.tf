@@ -1,14 +1,26 @@
+data "aws_availability_zones" "available" {}
+
+# VPC
 resource "aws_vpc" "main" {
-  ...
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+
+  tags = {
+    Name = "main-vpc"
+  }
 }
 
+# Internet Gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
+
   tags = {
     Name = "main-igw"
   }
 }
 
+# Public Subnets
 resource "aws_subnet" "public" {
   count                   = 2
   vpc_id                  = aws_vpc.main.id
@@ -21,6 +33,7 @@ resource "aws_subnet" "public" {
   }
 }
 
+# Route Table for Public Subnets
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -34,12 +47,14 @@ resource "aws_route_table" "public" {
   }
 }
 
+# Associate Subnets with Public Route Table
 resource "aws_route_table_association" "public" {
   count          = length(aws_subnet.public)
   subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
 }
 
+# Security Group for ECS Services
 resource "aws_security_group" "ecs_service" {
   name        = "ecs-service-sg"
   description = "Allow traffic for ECS services"
@@ -64,8 +79,7 @@ resource "aws_security_group" "ecs_service" {
   }
 }
 
-data "aws_availability_zones" "available" {}
-
+# Outputs
 output "vpc_id" {
   value = aws_vpc.main.id
 }
@@ -78,8 +92,9 @@ output "public_subnet_ids" {
   value = aws_subnet.public[*].id
 }
 
-output "security_group_ids" {
+output "ecs_sg_ids" {
   value = [aws_security_group.ecs_service.id]
 }
+
 
 
