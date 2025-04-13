@@ -28,7 +28,7 @@ module "efs" {
 
   subnet_ids         = module.vpc.public_subnet_ids
   vpc_id             = module.vpc.vpc_id
-  efs_sg_id          = module.vpc.efs_sg_id
+  ecs_sg_id          = module.vpc.ecs_sg_ids  # Pass the security group ID here
 }
 
 # IAM Role for ECS Tasks

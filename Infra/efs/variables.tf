@@ -8,9 +8,10 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "efs_sg_id" {
-  description = "Security Group ID for EFS"
+variable "ecs_sg_id" {
+  description = "Security Group ID for ECS services"
   type        = string
 }
+
 
 
