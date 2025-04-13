@@ -13,10 +13,14 @@ provider "aws" {
   region = var.aws_region
 }
 
-# VPC + Networking Module
 module "vpc" {
   source = "./network"
+
+  availability_zones    = ["us-east-1a", "us-east-1b"]   # Adjust as per your region
+  public_subnet_cidrs   = ["10.0.1.0/24", "10.0.2.0/24"]
+  private_subnet_cidrs  = ["10.0.3.0/24", "10.0.4.0/24"]
 }
+
 
 # EFS Module
 module "efs" {
