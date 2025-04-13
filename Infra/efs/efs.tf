@@ -13,12 +13,20 @@ resource "aws_efs_mount_target" "this" {
   subnet_id      = var.subnet_ids[count.index]
   security_groups = [var.ecs_sg_id]  # Pass ecs_sg_id as a variable
 
+  # Remove tags here, as they are not supported directly for mount targets.
+}
+
+# Tag the mount targets using aws_efs_mount_target_tag
+resource "aws_efs_mount_target_tag" "efs_mount_tag" {
+  count = length(var.subnet_ids)
+
+  mount_target_id = aws_efs_mount_target.this[count.index].id
+
   tags = {
     Name = "efs-mount-target-${count.index}"
   }
 }
 
-# This is a separate resource to apply tags after the mount target is created
 resource "aws_security_group_rule" "ecs_service" {
   # Example to create ECS security group rules if needed
   type        = "ingress"
@@ -30,7 +38,6 @@ resource "aws_security_group_rule" "ecs_service" {
   security_group_id = var.ecs_sg_id
 }
 
-# Security Group for ECS (if you haven't defined it in VPC module)
 resource "aws_security_group" "ecs_service" {
   name        = "ecs-service-sg"
   description = "Allow traffic for ECS services"
@@ -55,16 +62,6 @@ resource "aws_security_group" "ecs_service" {
   }
 }
 
-# Tagging for the mount targets after creation
-resource "aws_efs_mount_target_tag" "efs_mount_tag" {
-  count = length(var.subnet_ids)
-
-  mount_target_id = aws_efs_mount_target.this[count.index].id
-
-  tags = {
-    Name = "efs-mount-target-${count.index}"
-  }
-}
 
 
 
