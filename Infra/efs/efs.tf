@@ -4,11 +4,14 @@ resource "aws_efs_file_system" "this" {
 }
 
 resource "aws_efs_mount_target" "this" {
-  for_each = toset(var.subnet_ids)
+  count          = length(var.subnet_ids)
+  file_system_id = aws_efs_file_system.this.id
+  subnet_id      = var.subnet_ids[count.index]
+  security_groups = [aws_security_group.ecs_service.id]
 
-  file_system_id  = aws_efs_file_system.this.id
-  subnet_id       = each.value
-  security_groups = [var.efs_sg_id]
+  tags = {
+    Name = "efs-mount-target-${count.index}"
+  }
 }
 
 resource "aws_efs_access_point" "this" {
