@@ -73,24 +73,3 @@ module "ecs_nodejs" {
   security_group_ids   = module.vpc.ecs_sg_ids
 }
 
-# Outputs for debugging or reference
-output "vpc_id" {
-  value = module.vpc.vpc_id
-}
-
-output "public_subnet_ids" {
-  value = module.vpc.public_subnet_ids
-}
-
-output "ecs_sg_ids" {
-  value = module.vpc.ecs_sg_ids
-}
-
-output "efs_id" {
-  value = module.efs.efs_id
-}
-
-output "access_point_arn" {
-  value = module.efs.access_point_arn
-}
-
