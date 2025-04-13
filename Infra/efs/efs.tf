@@ -1,43 +1,65 @@
 resource "aws_efs_file_system" "this" {
-  creation_token = "my-efs"
-  encrypted      = true
+  creation_token = "efs-${var.name}"
+
+  performance_mode = var.performance_mode
 }
 
 resource "aws_efs_mount_target" "this" {
   count          = length(var.subnet_ids)
   file_system_id = aws_efs_file_system.this.id
   subnet_id      = var.subnet_ids[count.index]
-  security_groups = [var.ecs_sg_id]  # Use the passed security group ID
+  security_groups = [var.ecs_sg_id]  # Assuming you pass ecs_sg_id as a variable
+
+  # Remove the tags block from here as it's unsupported
+}
+
+# This is a separate resource to apply tags after the mount target is created
+resource "aws_security_group_rule" "ecs_service" {
+  # Example to create ECS security group rules if needed
+  type        = "ingress"
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = var.ecs_sg_id
+}
+
+resource "aws_security_group" "ecs_service" {
+  # ECS Security Group configuration if not already created
+  name        = "ecs-service-sg"
+  description = "Allow traffic for ECS services"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "ecs-service-sg"
+  }
+}
+
+# Tagging for the mount targets after creation
+resource "aws_efs_mount_target_tag" "efs_mount_tag" {
+  count = length(var.subnet_ids)
+
+  mount_target_id = aws_efs_mount_target.this[count.index].id
 
   tags = {
     Name = "efs-mount-target-${count.index}"
   }
 }
 
-resource "aws_efs_access_point" "this" {
-  file_system_id = aws_efs_file_system.this.id
-
-  posix_user {
-    uid = 1000
-    gid = 1000
-  }
-
-  root_directory {
-    path = "/ecs"
-    creation_info {
-      owner_gid   = 1000
-      owner_uid   = 1000
-      permissions = "755"
-    }
-  }
-}
-
-output "efs_id" {
-  value = aws_efs_file_system.this.id
-}
-
-output "access_point_arn" {
-  value = aws_efs_access_point.this.arn
-}
 
 
