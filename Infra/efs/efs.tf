@@ -30,8 +30,8 @@ resource "aws_security_group_rule" "ecs_service" {
   security_group_id = var.ecs_sg_id
 }
 
+# Security Group for ECS (if you haven't defined it in VPC module)
 resource "aws_security_group" "ecs_service" {
-  # ECS Security Group configuration if not already created
   name        = "ecs-service-sg"
   description = "Allow traffic for ECS services"
   vpc_id      = var.vpc_id
@@ -65,6 +65,7 @@ resource "aws_efs_mount_target_tag" "efs_mount_tag" {
     Name = "efs-mount-target-${count.index}"
   }
 }
+
 
 
 

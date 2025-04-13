@@ -13,6 +13,7 @@ provider "aws" {
   region = var.aws_region
 }
 
+# VPC Module
 module "vpc" {
   source = "./network"
 
@@ -21,17 +22,16 @@ module "vpc" {
   private_subnet_cidrs  = ["10.0.3.0/24", "10.0.4.0/24"]
 }
 
-
 # EFS Module
 module "efs" {
   source = "./efs"
 
-  subnet_ids     = module.vpc.public_subnet_ids
-  ecs_sg_id      = module.vpc.ecs_sg_ids[0]  # Assuming ECS SG is passed from vpc
-  name           = "my-efs"  # Pass the name of the EFS
+  subnet_ids      = module.vpc.public_subnet_ids
+  ecs_sg_id       = module.vpc.ecs_sg_ids[0]  # Assuming ECS SG is passed from vpc
+  name            = "my-efs"  # Pass the name of the EFS
   performance_mode = "generalPurpose"  # or "maxIO"
+  vpc_id          = module.vpc.vpc_id  # Pass the vpc_id from the VPC module
 }
-
 
 # IAM Role for ECS Tasks
 resource "aws_iam_role" "ecs_task_execution_role" {
@@ -71,5 +71,26 @@ module "ecs_nodejs" {
   subnet_ids           = module.vpc.public_subnet_ids
   ecs_cluster_id       = aws_ecs_cluster.main.id
   security_group_ids   = module.vpc.ecs_sg_ids
+}
+
+# Outputs for debugging or reference
+output "vpc_id" {
+  value = module.vpc.vpc_id
+}
+
+output "public_subnet_ids" {
+  value = module.vpc.public_subnet_ids
+}
+
+output "ecs_sg_ids" {
+  value = module.vpc.ecs_sg_ids
+}
+
+output "efs_id" {
+  value = module.efs.efs_id
+}
+
+output "access_point_arn" {
+  value = module.efs.access_point_arn
 }
 

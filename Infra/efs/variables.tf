@@ -15,7 +15,7 @@ variable "subnet_ids" {
 }
 
 variable "vpc_id" {
-  description = "VPC ID for EFS"
+  description = "The ID of the VPC where the EFS will be created"
   type        = string
 }
 
@@ -23,6 +23,7 @@ variable "ecs_sg_id" {
   description = "Security Group ID for ECS services"
   type        = string
 }
+
 
 
 
