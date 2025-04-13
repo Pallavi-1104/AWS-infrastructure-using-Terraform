@@ -7,8 +7,7 @@ output "public_subnets" {
 }
 
 output "private_subnets" {
-  description = "List of private subnet IDs"
-  value       = module.vpc.private_subnet_ids
+  value = module.vpc.private_subnet_ids
 }
 
 output "efs_id" {

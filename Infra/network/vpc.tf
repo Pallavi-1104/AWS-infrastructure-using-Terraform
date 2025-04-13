@@ -54,6 +54,18 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
+resource "aws_subnet" "private" {
+  count                   = 2
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = cidrsubnet("10.0.0.0/16", 4, count.index + 2)
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "private-subnet-${count.index}"
+  }
+}
+
 # Security Group for ECS Services
 resource "aws_security_group" "ecs_service" {
   name        = "ecs-service-sg"
@@ -90,6 +102,10 @@ output "vpc_id_unique" {
 
 output "public_subnet_ids" {
   value = aws_subnet.public[*].id
+}
+
+output "private_subnet_ids" {
+  value = aws_subnet.private[*].id
 }
 
 output "ecs_sg_ids" {
