@@ -59,13 +59,11 @@ resource "aws_ecs_cluster" "main" {
 # ECS Module with Containers
 module "ecs_nodejs" {
   source = "./ecs_nodejs"
-
-  # Pass the required variables
-  execution_role_arn    = aws_iam_role.ecs_task_execution_role.arn
-  subnet_ids            = module.vpc.private_subnet_ids  # Private subnet IDs for ECS tasks
-  ecs_cluster_id        = aws_ecs_cluster.main.id
-  security_group_ids    = [aws_security_group.ecs_service.id]
-  file_system_id        = module.efs.efs_id  # EFS file system ID
-  efs_access_point_arn  = module.efs.access_point_arn  # EFS access point ARN
+  # other parameters...
 }
+
+resource "aws_ecs_task_definition" "nodejs" {
+  # resource details...
+}
+
 
