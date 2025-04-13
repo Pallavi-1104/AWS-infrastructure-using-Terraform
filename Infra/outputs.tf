@@ -1,11 +1,9 @@
 output "vpc_id" {
-  description = "The ID of the created VPC"
-  value       = module.vpc.vpc_id
+  value = module.vpc.vpc_id
 }
 
 output "public_subnets" {
-  description = "List of public subnet IDs"
-  value       = module.vpc.public_subnet_ids
+  value = module.vpc.public_subnet_ids
 }
 
 output "private_subnets" {
@@ -13,14 +11,12 @@ output "private_subnets" {
   value       = module.vpc.private_subnet_ids
 }
 
-output "efs_file_system_id" {
-  description = "EFS File System ID"
-  value       = module.efs.efs_id
+output "efs_id" {
+  value = module.efs.efs_id
 }
 
 output "efs_access_point_arn" {
-  description = "EFS Access Point ARN"
-  value       = module.efs.efs_access_point_arn
+  value = module.efs.access_point_arn
 }
 
 output "execution_role_arn" {
@@ -33,7 +29,6 @@ output "ecs_cluster_id" {
   value       = aws_ecs_cluster.main.id
 }
 
-output "security_group_ids" {
-  description = "Security group IDs used by ECS tasks"
-  value       = module.vpc.security_group_ids
+output "ecs_sg_ids" {
+  value = module.vpc.ecs_sg_ids
 }

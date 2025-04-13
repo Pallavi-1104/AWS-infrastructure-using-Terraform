@@ -38,4 +38,3 @@ output "access_point_arn" {
 }
 
 
-
