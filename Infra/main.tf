@@ -25,12 +25,7 @@ module "vpc" {
 # EFS Module
 module "efs" {
   source = "./efs"
-
-  subnet_ids      = module.vpc.public_subnet_ids
-  ecs_sg_id       = module.vpc.ecs_sg_ids[0]  # Assuming ECS SG is passed from vpc
-  name            = "my-efs"  # Pass the name of the EFS
-  performance_mode = "generalPurpose"  # or "maxIO"
-  vpc_id          = module.vpc.vpc_id  # Pass the vpc_id from the VPC module
+  # Pass necessary variables if required
 }
 
 # IAM Role for ECS Tasks
@@ -63,13 +58,8 @@ resource "aws_ecs_cluster" "main" {
 
 # ECS Module with Containers
 module "ecs_nodejs" {
-  source = "./ecs"
-
-  execution_role_arn   = aws_iam_role.ecs_task_execution_role.arn
-  file_system_id       = module.efs.efs_id
+  source            = "./ecs"
+  file_system_id    = module.efs.efs_id
   efs_access_point_arn = module.efs.access_point_arn
-  subnet_ids           = module.vpc.public_subnet_ids
-  ecs_cluster_id       = aws_ecs_cluster.main.id
-  security_group_ids   = module.vpc.ecs_sg_ids
 }
 
