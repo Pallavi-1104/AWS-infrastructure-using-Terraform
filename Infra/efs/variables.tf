@@ -1,3 +1,14 @@
+variable "name" {
+  description = "The name for the EFS filesystem"
+  type        = string
+}
+
+variable "performance_mode" {
+  description = "The performance mode for the EFS filesystem"
+  type        = string
+  default     = "generalPurpose"  # Set to default if you don't need to pass this variable
+}
+
 variable "subnet_ids" {
   description = "List of subnet IDs for EFS mount targets"
   type        = list(string)

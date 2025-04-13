@@ -1,16 +1,21 @@
 resource "aws_efs_file_system" "this" {
   creation_token = "efs-${var.name}"
-
   performance_mode = var.performance_mode
+
+  tags = {
+    Name = var.name
+  }
 }
 
 resource "aws_efs_mount_target" "this" {
   count          = length(var.subnet_ids)
   file_system_id = aws_efs_file_system.this.id
   subnet_id      = var.subnet_ids[count.index]
-  security_groups = [var.ecs_sg_id]  # Assuming you pass ecs_sg_id as a variable
+  security_groups = [var.ecs_sg_id]  # Pass ecs_sg_id as a variable
 
-  # Remove the tags block from here as it's unsupported
+  tags = {
+    Name = "efs-mount-target-${count.index}"
+  }
 }
 
 # This is a separate resource to apply tags after the mount target is created

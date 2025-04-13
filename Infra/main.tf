@@ -26,10 +26,12 @@ module "vpc" {
 module "efs" {
   source = "./efs"
 
-  subnet_ids         = module.vpc.public_subnet_ids
-  vpc_id             = module.vpc.vpc_id
-  ecs_sg_id          = module.vpc.ecs_sg_ids  # Pass the security group ID here
+  subnet_ids     = module.vpc.public_subnet_ids
+  ecs_sg_id      = module.vpc.ecs_sg_ids[0]  # Assuming ECS SG is passed from vpc
+  name           = "my-efs"  # Pass the name of the EFS
+  performance_mode = "generalPurpose"  # or "maxIO"
 }
+
 
 # IAM Role for ECS Tasks
 resource "aws_iam_role" "ecs_task_execution_role" {
