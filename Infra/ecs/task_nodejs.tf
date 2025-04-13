@@ -6,21 +6,19 @@ resource "aws_ecs_task_definition" "nodejs" {
   memory                   = "512"
   execution_role_arn       = var.execution_role_arn
 
-  container_definitions = jsonencode([
-    {
-      name      = "nodejs-app"
-      image     = "your-nodejs-image"  # Replace this
-      essential = true
-      portMappings = [{
-        containerPort = 3000
-        hostPort      = 3000
-      }]
-      mountPoints = [{
-        sourceVolume  = "nodejs-volume"
-        containerPath = "/mnt/data"
-      }]
-    }
-  ])
+  container_definitions = jsonencode([{
+    name      = "nodejs-app"
+    image     = "your-nodejs-image"  # Replace with your Docker image
+    essential = true
+    portMappings = [{
+      containerPort = 3000
+      hostPort      = 3000
+    }]
+    mountPoints = [{
+      sourceVolume  = "nodejs-volume"
+      containerPath = "/mnt/data"
+    }]
+  }])
 
   volume {
     name = "nodejs-volume"
@@ -34,4 +32,5 @@ resource "aws_ecs_task_definition" "nodejs" {
     }
   }
 }
+
 
