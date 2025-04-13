@@ -1,6 +1,5 @@
 data "aws_availability_zones" "available" {}
 
-# VPC
 resource "aws_vpc" "main" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
@@ -91,11 +90,6 @@ resource "aws_security_group" "ecs_service" {
   }
 }
 
-# Outputs
-output "vpc_id" {
-  value = aws_vpc.main.id
-}
-
 output "vpc_id" {
   value = aws_vpc.main.id
 }
@@ -111,5 +105,6 @@ output "private_subnet_ids" {
 output "ecs_sg_ids" {
   value = [aws_security_group.ecs_service.id]
 }
+
 
 
