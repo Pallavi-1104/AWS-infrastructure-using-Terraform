@@ -1,10 +1,10 @@
 resource "aws_ecs_task_definition" "mongodb" {
   family                   = "mongodb-task"
   requires_compatibilities = ["EC2"]
-  network_mode            = "awsvpc"
-  cpu                     = "256"
-  memory                  = "512"
-  execution_role_arn      = var.execution_role_arn
+  network_mode             = "awsvpc"
+  cpu                      = "256"
+  memory                   = "512"
+  execution_role_arn       = var.execution_role_arn
 
   container_definitions = jsonencode([
     {
@@ -20,7 +20,7 @@ resource "aws_ecs_task_definition" "mongodb" {
       mountPoints = [
         {
           containerPath = "/data/db"
-          sourceVolume  = "efs-data"
+          sourceVolume  = "mongodb-efs"
           readOnly      = false
         }
       ]
@@ -28,11 +28,11 @@ resource "aws_ecs_task_definition" "mongodb" {
   ])
 
   volume {
-    name = "efs-data"
+    name = "mongodb-efs"
     efs_volume_configuration {
-      file_system_id          = var.file_system_id
-      root_directory          = "/"
-      transit_encryption      = "ENABLED"
+      file_system_id     = var.file_system_id
+      root_directory     = "/mongodb"
+      transit_encryption = "ENABLED"
     }
   }
 }
@@ -52,3 +52,4 @@ resource "aws_ecs_service" "mongodb" {
 
   depends_on = [aws_ecs_task_definition.mongodb]
 }
+

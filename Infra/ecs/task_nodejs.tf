@@ -1,10 +1,10 @@
 resource "aws_ecs_task_definition" "nodejs" {
   family                   = "nodejs-task"
   requires_compatibilities = ["EC2"]
-  network_mode            = "awsvpc"
-  cpu                     = "256"
-  memory                  = "512"
-  execution_role_arn      = var.execution_role_arn
+  network_mode             = "awsvpc"
+  cpu                      = "256"
+  memory                   = "512"
+  execution_role_arn       = var.execution_role_arn
 
   container_definitions = jsonencode([
     {
@@ -20,7 +20,7 @@ resource "aws_ecs_task_definition" "nodejs" {
       mountPoints = [
         {
           containerPath = "/data"
-          sourceVolume  = "efs-data"
+          sourceVolume  = "nodejs-efs"
           readOnly      = false
         }
       ]
@@ -28,11 +28,11 @@ resource "aws_ecs_task_definition" "nodejs" {
   ])
 
   volume {
-    name = "efs-data"
+    name = "nodejs-efs"
     efs_volume_configuration {
-      file_system_id          = var.file_system_id
-      root_directory          = "/"
-      transit_encryption      = "ENABLED"
+      file_system_id     = var.file_system_id
+      root_directory     = "/nodejs"
+      transit_encryption = "ENABLED"
     }
   }
 }

@@ -1,10 +1,10 @@
 resource "aws_ecs_task_definition" "prometheus" {
   family                   = "prometheus-task"
   requires_compatibilities = ["EC2"]
-  network_mode            = "awsvpc"
-  cpu                     = "256"
-  memory                  = "512"
-  execution_role_arn      = var.execution_role_arn
+  network_mode             = "awsvpc"
+  cpu                      = "256"
+  memory                   = "512"
+  execution_role_arn       = var.execution_role_arn
 
   container_definitions = jsonencode([
     {
@@ -20,19 +20,26 @@ resource "aws_ecs_task_definition" "prometheus" {
       mountPoints = [
         {
           containerPath = "/prometheus"
-          sourceVolume  = "efs-data"
+          sourceVolume  = "prometheus-efs"
           readOnly      = false
         }
-      ]
+      ],
+      healthCheck = {
+        command     = ["CMD-SHELL", "wget --spider -q http://localhost:9090/-/healthy || exit 1"]
+        interval    = 30
+        timeout     = 5
+        retries     = 3
+        startPeriod = 60
+      }
     }
   ])
 
   volume {
-    name = "efs-data"
+    name = "prometheus-efs"
     efs_volume_configuration {
-      file_system_id          = var.file_system_id
-      root_directory          = "/"
-      transit_encryption      = "ENABLED"
+      file_system_id     = var.file_system_id
+      root_directory     = "/prometheus"
+      transit_encryption = "ENABLED"
     }
   }
 }
@@ -52,3 +59,4 @@ resource "aws_ecs_service" "prometheus" {
 
   depends_on = [aws_ecs_task_definition.prometheus]
 }
+
