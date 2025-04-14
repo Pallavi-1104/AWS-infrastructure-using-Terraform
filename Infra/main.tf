@@ -24,9 +24,12 @@ module "vpc" {
 
 # EFS Module
 module "efs" {
-  source = "./efs"
-  ...
+  source            = "./efs"
+  vpc_id            = aws_vpc.main.id
+  subnet_ids        = module.vpc.private_subnet_ids
+  security_group_id = aws_security_group.efs_sg.id
 }
+
 
 # IAM Role for ECS Tasks
 resource "aws_iam_role" "ecs_task_execution_role" {
