@@ -11,7 +11,10 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "subnet_ids" {}
+variable "subnet_ids" {
+  description = "List of subnet IDs for EFS"
+  type        = list(string)
+}
 
 variable "availability_zones" {
   description = "List of availability zones in the region."
@@ -45,7 +48,7 @@ variable "file_system_id" {
 }
 
 variable "efs_access_point_arn" {
-  description = "The ARN of the EFS access point"
+  description = "EFS Access Point ARN"
   type        = string
 }
 
@@ -54,4 +57,17 @@ variable "nodejs_image" {
   type        = string
 }
 
-variable "name" {}
+variable "name" {
+  description = "Name of the EFS"
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "The ID of the VPC"
+  type        = string
+}
+
+variable "ecs_sg_id" {
+  description = "Security Group ID used by ECS tasks"
+  type        = string
+}

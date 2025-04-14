@@ -25,7 +25,12 @@ module "vpc" {
 
 # EFS Module
 module "efs" {
-  source = "./efs"
+  source                = "../efs"
+  vpc_id                = var.vpc_id
+  subnet_ids            = var.subnet_ids
+  ecs_sg_id             = var.ecs_sg_id
+  name                  = var.name
+  efs_access_point_arn  = var.efs_access_point_arn
 }
 
 # IAM Role for ECS Tasks
