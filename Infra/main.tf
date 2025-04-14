@@ -24,7 +24,12 @@ module "vpc" {
 
 # EFS Module
 module "efs" {
-  source = "./efs"
+  source = "./efs"  # Adjust the path to your EFS module
+
+  name        = "my-efs"            # Provide the name for your EFS
+  subnet_ids  = [aws_subnet.subnet_id] # Provide subnet IDs
+  vpc_id      = aws_vpc.vpc_id      # Provide the VPC ID
+  ecs_sg_id   = aws_security_group.ecs_sg_id # Provide the ECS Security Group ID
 }
 
 # IAM Role for ECS Tasks
