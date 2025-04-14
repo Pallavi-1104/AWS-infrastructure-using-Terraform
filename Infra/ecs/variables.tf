@@ -6,9 +6,12 @@ variable "efs_access_point_id" {
   type = string
 }
 
+variable "nodejs_image" {
+  type = string
+}
+
 variable "execution_role_arn" {
-  description = "IAM Execution Role ARN for ECS task"
-  type        = string
+  type = string
 }
 
 variable "subnet_ids" {
