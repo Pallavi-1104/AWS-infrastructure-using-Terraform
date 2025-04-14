@@ -24,6 +24,13 @@ module "efs" {
   # other variables
 }
 
+module "ecs" {
+  source = "./ecs"
+  efs_id              = module.efs.efs_id
+  efs_access_point_id = module.efs.efs_access_point_id
+  # other required vars
+}
+
 # IAM Role for ECS Tasks
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "ecsTaskExecutionRole"

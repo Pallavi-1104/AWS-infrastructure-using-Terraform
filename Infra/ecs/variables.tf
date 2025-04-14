@@ -1,11 +1,9 @@
-variable "file_system_id" {
-  description = "EFS File System ID to mount into ECS Task"
-  type        = string
+variable "efs_id" {
+  type = string
 }
 
-variable "efs_access_point_arn" {
-  description = "EFS Access Point ARN to mount into ECS Task"
-  type        = string
+variable "efs_access_point_id" {
+  type = string
 }
 
 variable "execution_role_arn" {
