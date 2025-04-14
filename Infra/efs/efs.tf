@@ -11,7 +11,7 @@ resource "aws_efs_mount_target" "this" {
   count          = length(var.subnet_ids)
   file_system_id = aws_efs_file_system.this.id
   subnet_id      = var.subnet_ids[count.index]
-  security_groups = [var.ecs_sg_id]  # Pass ecs_sg_id as a variable
+  security_groups = [var.ecs_sg_id]
 
   # Mount targets don't support 'tags' directly in this resource
   # Apply tags at the file system level or handle it post-creation
@@ -51,8 +51,8 @@ resource "aws_security_group" "ecs_service" {
   }
 }
 
-resource "aws_efs_access_point" "efs_ap" {
-  file_system_id = aws_efs_file_system.efs.id
+resource "aws_efs_access_point" "this" {
+  file_system_id = aws_efs_file_system.this.id
 
   root_directory {
     path = "/data"
@@ -64,14 +64,15 @@ resource "aws_efs_access_point" "efs_ap" {
   }
 }
 
-output "file_system_id" {
+output "efs_id" {
   value = aws_efs_file_system.this.id
 }
 
-
 output "efs_access_point_arn" {
-  value = aws_efs_access_point.efs_ap.arn
+  value = aws_efs_access_point.this.arn
 }
+
+
 
 
 

@@ -16,7 +16,7 @@ provider "aws" {
 # VPC Module
 module "vpc" {
   source = "./network"
-  
+
   # Add the required arguments
   availability_zones = var.availability_zones
   public_subnet_cidrs = var.public_subnet_cidrs
@@ -25,12 +25,12 @@ module "vpc" {
 
 # EFS Module
 module "efs" {
-  source                = "./efs"
-  vpc_id                = var.vpc_id
-  subnet_ids            = var.subnet_ids
-  ecs_sg_id             = var.ecs_sg_id
-  name                  = var.name
-  efs_access_point_arn  = var.efs_access_point_arn
+  source               = "../efs"
+  vpc_id               = var.vpc_id
+  subnet_ids           = var.subnet_ids
+  ecs_sg_id            = var.ecs_sg_id
+  name                 = var.name
+  efs_access_point_arn = var.efs_access_point_arn
 }
 
 # IAM Role for ECS Tasks
@@ -83,7 +83,7 @@ resource "aws_ecs_cluster" "main" {
 
 # ECS Module with Containers (Final ECS Module)
 module "ecs_nodejs" {
-  source               = "./ecs"
+  source               = "../ecs"
   ecs_cluster_id       = aws_ecs_cluster.main.id
   subnet_ids           = module.vpc.private_subnet_ids
   security_group_ids   = [aws_security_group.ecs_service_sg.id]
@@ -93,10 +93,8 @@ module "ecs_nodejs" {
   nodejs_image         = var.nodejs_image
 }
 
-
 # Output for EFS ARN
 output "efs_access_point_arn" {
   value = module.efs.efs_access_point_arn
 }
-
 

@@ -2,8 +2,9 @@ variable "execution_role_arn" {
   type = string
 }
 
-variable "efs_id" {
-  type = string
+variable "file_system_id" {
+  description = "EFS file system ID"
+  type        = string
 }
 
 variable "efs_access_point_arn" {
