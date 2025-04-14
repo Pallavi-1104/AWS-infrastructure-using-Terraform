@@ -87,9 +87,9 @@ module "ecs_nodejs" {
   ecs_cluster_id       = aws_ecs_cluster.main.id
   subnet_ids           = module.vpc.private_subnet_ids
   security_group_ids   = [aws_security_group.ecs_service_sg.id]
-  efs_id               = module.efs.efs_id
+  file_system_id       = var.file_system_id
   efs_access_point_arn = module.efs.efs_access_point_arn
-  execution_role_arn   = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn   = var.execution_role_arn
   nodejs_image         = var.nodejs_image
 }
 

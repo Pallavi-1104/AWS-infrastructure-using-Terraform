@@ -38,8 +38,13 @@ variable "name" {
   type        = string
 }
 
-variable "efs_access_point_arn" {
-  description = "The ARN of the EFS access point"
+variable "file_system_id" {
+  description = "The ID of the EFS file system"
+  type        = string
+}
+
+variable "execution_role_arn" {
+  description = "The ARN of the ECS task execution role"
   type        = string
 }
 
