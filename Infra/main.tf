@@ -15,7 +15,7 @@ provider "aws" {
 
 # VPC Module
 module "vpc" {
-  source = "./network/vpc"  # Adjust the path to your VPC module
+  source = "./network/vpc"
 }
 
 # EFS Module
