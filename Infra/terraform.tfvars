@@ -6,7 +6,6 @@ private_subnet_cidrs   = ["10.0.3.0/24", "10.0.4.0/24"]
 
 nodejs_image           = "your-nodejs-image:latest"
 execution_role_arn     = "arn:aws:iam::<account-id>:role/ecsExecutionRole"
-file_system_id         = "fs-0442f0892b311c0c8"
 efs_access_point_arn   = "arn:aws:elasticfilesystem:region:account-id:access-point/fsap-xxxxxxxx"
 vpc_id                 = "vpc-xxxxxxxx"
 subnet_ids             = ["subnet-xxxxxxxx", "subnet-yyyyyyyy"]

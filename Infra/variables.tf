@@ -38,8 +38,8 @@ variable "name" {
   type        = string
 }
 
-variable "efs_id" {
-  description = "The ID of the EFS filesystem"
+variable "file_system_id" {
+  description = "EFS File System ID"
   type        = string
 }
 
