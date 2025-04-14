@@ -28,3 +28,18 @@ variable "ecs_cluster_name" {
   type        = string
   default     = "ecs-monitoring-cluster"
 }
+
+variable "execution_role_arn" {
+  description = "The execution role ARN"
+  type        = string
+}
+
+variable "file_system_id" {
+  description = "The EFS file system ID"
+  type        = string
+}
+
+variable "efs_access_point_arn" {
+  description = "The ARN of the EFS access point"
+  type        = string
+}

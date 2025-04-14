@@ -15,21 +15,14 @@ provider "aws" {
 
 # VPC Module
 module "vpc" {
-  source = "./network"
-
-  availability_zones    = ["us-east-1a", "us-east-1b"]   # Adjust as per your region
-  public_subnet_cidrs   = ["10.0.1.0/24", "10.0.2.0/24"]
-  private_subnet_cidrs  = ["10.0.3.0/24", "10.0.4.0/24"]
+  source = "./network/vpc"  # Adjust the path to your VPC module
 }
 
 # EFS Module
 module "efs" {
-  source = "./efs"  # Adjust the path to your EFS module
-
-  name        = "my-efs"            # Provide the name for your EFS
-  subnet_ids  = [aws_subnet.subnet_id] # Provide subnet IDs
-  vpc_id      = aws_vpc.vpc_id      # Provide the VPC ID
-  ecs_sg_id   = aws_security_group.ecs_sg_id # Provide the ECS Security Group ID
+  source = "./efs"
+  vpc_id = module.vpc.vpc_id  # Referencing the vpc_id from the vpc module
+  # Other inputs...
 }
 
 # IAM Role for ECS Tasks
