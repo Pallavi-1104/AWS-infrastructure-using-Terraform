@@ -16,6 +16,11 @@ provider "aws" {
 # VPC Module
 module "vpc" {
   source = "./network"
+  
+  # Add the required arguments
+  availability_zones = var.availability_zones
+  public_subnet_cidrs = var.public_subnet_cidrs
+  private_subnet_cidrs = var.private_subnet_cidrs
 }
 
 # EFS Module
@@ -88,4 +93,5 @@ module "ecs_nodejs" {
 output "efs_access_point_arn" {
   value = module.efs.efs_access_point_arn
 }
+
 
