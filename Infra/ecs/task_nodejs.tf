@@ -42,7 +42,6 @@ resource "aws_ecs_task_definition" "nodejs" {
   }
 }
 
-
   volume {
     name = "efs-volume"
 
