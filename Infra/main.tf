@@ -83,7 +83,7 @@ resource "aws_ecs_cluster" "main" {
 
 # ECS Module with Containers (Final ECS Module)
 module "ecs_nodejs" {
-  source               = "./modules/ecs_nodejs"
+  source               = "./ecs"
   ecs_cluster_id       = aws_ecs_cluster.main.id
   #efs_id                = var.efs_id
   subnet_ids           = module.vpc.private_subnet_ids
