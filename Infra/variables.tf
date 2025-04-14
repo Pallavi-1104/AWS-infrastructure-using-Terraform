@@ -11,6 +11,8 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
+variable "subnet_ids" {}
+
 variable "availability_zones" {
   description = "List of availability zones in the region."
   type        = list(string)
@@ -51,3 +53,5 @@ variable "nodejs_image" {
   description = "The Docker image for the Node.js app"
   type        = string
 }
+
+variable "name" {}
