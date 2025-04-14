@@ -33,4 +33,16 @@ resource "aws_ecs_task_definition" "nodejs" {
   }
 }
 
+volume {
+  name = "efs-volume"
+
+  efs_volume_configuration {
+    file_system_id          = module.efs.efs_id
+    transit_encryption      = "ENABLED"
+    authorization_config {
+      access_point_id = module.efs.efs_access_point_id
+      iam             = "ENABLED"
+    }
+  }
+}
 

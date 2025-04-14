@@ -21,8 +21,7 @@ module "vpc" {
 # EFS Module
 module "efs" {
   source = "./efs"
-  vpc_id = module.vpc.vpc_id  # Referencing the vpc_id from the vpc module
-  # Other inputs...
+  # other variables
 }
 
 # IAM Role for ECS Tasks
@@ -101,5 +100,7 @@ resource "aws_ecs_task_definition" "nodejs" {
   }
 }
 
-
+output "efs_access_point_arn" {
+  value = module.efs.efs_access_point_arn
+}
 
