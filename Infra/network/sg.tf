@@ -1,13 +1,13 @@
-resource "aws_security_group" "efs_sg" {
-  name        = "efs-sg"
-  description = "Allow NFS access for EFS"
-  vpc_id      = aws_vpc.main.id
+resource "aws_security_group" "ecs_service_sg" {
+  name        = "ecs-service-sg"
+  description = "Allow traffic for ECS services"
+  vpc_id      = module.vpc.vpc_id
 
   ingress {
-    from_port   = 2049
-    to_port     = 2049
+    from_port   = 3000
+    to_port     = 3000
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -16,11 +16,8 @@ resource "aws_security_group" "efs_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = {
-    Name = "efs-sg"
-  }
 }
+
 
 output "efs_sg_id" {
   value = aws_security_group.efs_sg.id
