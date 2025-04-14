@@ -25,7 +25,7 @@ module "vpc" {
 
 # EFS Module
 module "efs" {
-  source               = "../efs"
+  source                = "./efs"
   vpc_id               = var.vpc_id
   subnet_ids           = var.subnet_ids
   ecs_sg_id            = var.ecs_sg_id
@@ -83,7 +83,7 @@ resource "aws_ecs_cluster" "main" {
 
 # ECS Module with Containers (Final ECS Module)
 module "ecs_nodejs" {
-  source               = "../ecs"
+  source               = "./ecs"
   ecs_cluster_id       = aws_ecs_cluster.main.id
   subnet_ids           = module.vpc.private_subnet_ids
   security_group_ids   = [aws_security_group.ecs_service_sg.id]
