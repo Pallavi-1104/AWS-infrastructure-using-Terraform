@@ -51,6 +51,25 @@ resource "aws_security_group" "ecs_service" {
   }
 }
 
+resource "aws_efs_access_point" "this" {
+  file_system_id = aws_efs_file_system.this.id
+
+  posix_user {
+    gid = 1000
+    uid = 1000
+  }
+
+  root_directory {
+    path = "/data"
+    creation_info {
+      owner_gid   = 1000
+      owner_uid   = 1000
+      permissions = "755"
+    }
+  }
+}
+
+
 output "file_system_id" {
   value = aws_efs_file_system.this.id
 }
@@ -58,6 +77,7 @@ output "file_system_id" {
 output "access_point_arn" {
   value = aws_efs_access_point.this.arn
 }
+
 
 
 

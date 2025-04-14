@@ -94,7 +94,7 @@ resource "aws_ecs_task_definition" "nodejs" {
       file_system_id          = var.file_system_id
       transit_encryption      = "ENABLED"
       authorization_config {
-        access_point_id = split("/", var.efs_access_point_arn)[length(split("/", var.efs_access_point_arn)) - 1]
+      access_point_id = split("/", module.efs.access_point_arn)[length(split("/", module.efs.access_point_arn)) - 1]
         iam             = "ENABLED"
       }
     }
