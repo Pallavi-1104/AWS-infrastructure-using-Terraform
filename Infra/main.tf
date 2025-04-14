@@ -25,7 +25,7 @@ module "vpc" {
 # EFS Module
 module "efs" {
   source = "./efs"
-  # Pass necessary variables if required
+  ...
 }
 
 # IAM Role for ECS Tasks
@@ -58,8 +58,8 @@ resource "aws_ecs_cluster" "main" {
 
 # ECS Module with Containers
 module "ecs_nodejs" {
-  source = "./ecs_nodejs"
-  # other parameters...
+  source = "./ecs"
+  ...
 }
 
 resource "aws_ecs_task_definition" "nodejs" {
