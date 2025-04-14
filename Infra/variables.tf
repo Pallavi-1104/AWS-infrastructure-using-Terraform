@@ -38,8 +38,8 @@ variable "name" {
   type        = string
 }
 
-variable "file_system_id" {
-  description = "The ID of the EFS file system"
+variable "efs_id" {
+  description = "The ID of the EFS filesystem"
   type        = string
 }
 
@@ -47,6 +47,12 @@ variable "execution_role_arn" {
   description = "The ARN of the ECS task execution role"
   type        = string
 }
+
+variable "efs_access_point_arn" {
+  description = "ARN of the EFS access point"
+  type        = string
+}
+
 
 variable "nodejs_image" {
   description = "Docker image for the Node.js application"
