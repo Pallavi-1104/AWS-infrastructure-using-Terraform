@@ -25,7 +25,7 @@ module "vpc" {
 
 # EFS Module
 module "efs" {
-  source                = "../efs"
+  source                = "./efs"
   vpc_id                = var.vpc_id
   subnet_ids            = var.subnet_ids
   ecs_sg_id             = var.ecs_sg_id
