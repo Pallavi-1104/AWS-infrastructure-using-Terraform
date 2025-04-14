@@ -15,25 +15,18 @@ provider "aws" {
 
 # VPC Module
 module "vpc" {
-  source = "./network"  
+  source = "./network"
 }
 
 # EFS Module
 module "efs" {
   source = "./efs"
-  # other variables
-}
-
-module "ecs" {
-  source = "./ecs"
-  efs_id              = module.efs.efs_id
-  efs_access_point_id = module.efs.efs_access_point_id
-  # other required vars
+  # Add variables here if needed
 }
 
 # IAM Role for ECS Tasks
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
+  name = "ecs-task-execution-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -60,54 +53,17 @@ resource "aws_ecs_cluster" "main" {
 }
 
 # ECS Module with Containers
-module "ecs_nodejs" {
-  source = "./ecs"
-
-  ecs_cluster_id       = aws_ecs_cluster.main.id
-  subnet_ids           = module.vpc.private_subnet_ids
-  security_group_ids   = [aws_security_group.ecs_service_sg.id]  # Assuming this is defined somewhere
-  file_system_id       = module.efs.file_system_id
-  efs_access_point_arn = module.efs.access_point_arn
-  execution_role_arn   = aws_iam_role.ecs_task_execution_role.arn
+module "ecs" {
+  source              = "./ecs"
+  ecs_cluster_id      = aws_ecs_cluster.main.id
+  subnet_ids          = module.vpc.private_subnet_ids
+  security_group_ids  = [aws_security_group.ecs_service_sg.id]  # Ensure you define this SG in a separate file
+  efs_id              = module.efs.efs_id
+  efs_access_point_id = module.efs.efs_access_point_id
+  execution_role_arn  = aws_iam_role.ecs_task_execution_role.arn
 }
 
-
-resource "aws_ecs_task_definition" "nodejs" {
-  family                   = "nodejs-task"
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["EC2"]
-  cpu                      = "256"
-  memory                   = "512"
-  execution_role_arn       = var.execution_role_arn
-
-  container_definitions = jsonencode([{
-    name      = "nodejs-app"
-    image     = "your-nodejs-image"  # Replace this with the correct image
-    essential = true
-    portMappings = [{
-      containerPort = 3000
-      hostPort      = 3000
-    }]
-    mountPoints = [{
-      sourceVolume  = "nodejs-volume"
-      containerPath = "/mnt/data"
-    }]
-  }])
-
-  volume {
-    name = "nodejs-volume"
-    efs_volume_configuration {
-      file_system_id          = var.file_system_id
-      transit_encryption      = "ENABLED"
-      authorization_config {
-      access_point_id = split("/", module.efs.access_point_arn)[length(split("/", module.efs.access_point_arn)) - 1]
-        iam             = "ENABLED"
-      }
-    }
-  }
-}
-
+# Output for visibility
 output "efs_access_point_arn" {
   value = module.efs.efs_access_point_arn
 }
-
