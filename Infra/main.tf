@@ -54,13 +54,12 @@ resource "aws_ecs_cluster" "main" {
 
 # ECS Module with Containers
 module "ecs" {
-  source              = "./ecs"
-  ecs_cluster_id      = aws_ecs_cluster.main.id
-  subnet_ids          = module.vpc.private_subnet_ids
-  security_group_ids  = [aws_security_group.ecs_service_sg.id]  # Ensure you define this SG in a separate file
+  source = "./ecs"
+  ...
+  execution_role_arn  = aws_iam_role.ecs_task_execution_role.arn
   efs_id              = module.efs.efs_id
   efs_access_point_id = module.efs.efs_access_point_id
-  execution_role_arn  = aws_iam_role.ecs_task_execution_role.arn
+  nodejs_image        = "your-nodejs-image" # replace with actual image
 }
 
 # Output for visibility
