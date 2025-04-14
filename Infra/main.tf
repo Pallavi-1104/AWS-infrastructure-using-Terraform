@@ -5,6 +5,7 @@ terraform {
       version = "~> 5.0"
     }
   }
+
   required_version = ">= 1.6.6"
 }
 
@@ -70,7 +71,7 @@ resource "aws_ecs_cluster" "main" {
   name = "ecs-monitoring-cluster"
 }
 
-# ECS Module (use this only)
+# ECS Module with Containers (Final ECS Module)
 module "ecs_nodejs" {
   source = "./ecs"
 
@@ -83,7 +84,8 @@ module "ecs_nodejs" {
   nodejs_image         = "your-nodejs-image:latest"
 }
 
-# Output
+# Output for EFS ARN
 output "efs_access_point_arn" {
   value = module.efs.efs_access_point_arn
 }
+
