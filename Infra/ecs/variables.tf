@@ -3,7 +3,7 @@ variable "execution_role_arn" {
 }
 
 variable "file_system_id" {
-  description = "The ID of the file system (EFS)"
+  description = "File system ID for EFS"
   type        = string
 }
 

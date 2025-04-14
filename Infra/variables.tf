@@ -49,9 +49,10 @@ variable "execution_role_arn" {
 }
 
 variable "efs_access_point_arn" {
-  description = "ARN of the EFS access point"
+  description = "EFS Access Point ARN"
   type        = string
 }
+
 
 
 variable "nodejs_image" {
